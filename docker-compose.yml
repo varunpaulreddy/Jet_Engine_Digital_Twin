@@ -1,0 +1,27 @@
+# ==============================================================================
+# FILE: docker-compose.yml
+# DESCRIPTION: Manages the Docker container for easy development.
+# ==============================================================================
+version: '3.8'
+
+services:
+  aura-dev:
+    build: .
+    container_name: aura-dev-container
+    volumes:
+      # Mount local directories into the container for live development
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./notebooks:/app/notebooks
+      - ./models:/app/models
+    # Enable GPU access for PyTorch training
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # Keep the container running in the background
+    stdin_open: true
+    tty: true
